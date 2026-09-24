@@ -6,8 +6,26 @@ A small Omarchy Shell overlay that searches Bitwarden login items and copies a u
 
 - Omarchy Shell with user plugins enabled.
 - Node.js 22 or 24 LTS on the Omarchy Shell process `PATH`.
-- Bitwarden CLI (`bw`) signed in with `bw login` before use.
+- Bitwarden CLI (`bw`) installed and available in the Omarchy Shell process `PATH`.
 - `wl-copy` and `wl-paste` from `wl-clipboard`, plus a Wayland clipboard compositor.
+
+You only need the Bitwarden CLI for this overlay; the full Bitwarden desktop app is not required. Omarchy's **System menu → Install → Service → Bitwarden** installs both the desktop app and CLI. To install only the CLI on Omarchy, use:
+
+```sh
+omarchy pkg add bitwarden-cli
+```
+
+Configure and sign in to the CLI before enabling the overlay. Bitwarden's cloud server is the default; for a self-hosted server, set its URL first:
+
+```sh
+bw config server https://your-bitwarden.example.com
+bw login
+bw login --check
+```
+
+Omit the `bw config server` line for the default Bitwarden cloud service. `bw login` opens the CLI sign-in flow; complete it interactively. Keep your master password and session key out of commands, shell history, and support requests.
+
+This plugin is a lightweight Omarchy Shell overlay, separate from Bitwarden's desktop app: it uses the CLI to search login items and copy credentials without opening the full app.
 
 The plugin was checked locally with Omarchy 4.0.3-1, Bitwarden CLI 2026.9.0, Node.js 26.9.0, and Qt 6 `qmlformat`; these are the local verification versions, not additional support promises. The backend uses the documented `bw unlock --passwordfile ... --raw`, `bw list ... --raw`, and `bw get ... --raw` interfaces. Verify compatibility with your installed CLI version before use.
 
@@ -29,6 +47,16 @@ Toggle the overlay with:
 ```sh
 omarchy-shell shell toggle nmorton.bitwarden
 ```
+
+### Optional keyboard shortcut
+
+The overlay does not install a global hotkey by default. To add one, put a binding in `~/.config/hypr/bindings.lua`, replacing the example key combination with one that is free on your system:
+
+```lua
+o.bind("SUPER + SHIFT + B", "Bitwarden overlay", "omarchy-shell shell toggle nmorton.bitwarden")
+```
+
+Check existing shortcuts first with `omarchy menu keybindings --print` and choose an unused combination. After saving, validate the Hyprland config with `hyprctl reload` and `hyprctl configerrors`.
 
 Enter the master password to unlock, search by item name, username, or URI, press Enter to copy the selected password, Ctrl+U to copy its username, Ctrl+L to lock, and Esc to close. Closing clears local session, item, password, and pending request state immediately and asks the CLI to lock when possible. Explicit local locking behaves the same even while a subprocess is busy; cleanup is queued until that bounded operation exits. A session expires after five minutes while open. There is no plugin-level screen-lock event subscription; close-to-lock and expiry are the supported boundaries.
 
@@ -56,3 +84,7 @@ The tests substitute `bw`, `wl-copy`, and `wl-paste` with temporary fixtures and
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Need help?
+
+If installation, CLI sign-in, or the optional hotkey setup gives you trouble, ask your coding agent for help. Share error messages and relevant configuration snippets, but never share your master password, session key, vault export, or real vault data.
