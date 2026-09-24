@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "nmorton.bitwarden",
+  "name": "Bitwarden CLI",
+  "version": "0.1.0",
+  "author": "Nathan Morton",
+  "description": "Search and copy credentials from the Bitwarden CLI",
+  "kinds": ["overlay"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Bitwarden.qml"
+  }
+}

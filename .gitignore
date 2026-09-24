@@ -1,0 +1,24 @@
+# Local credentials, exports, and runtime/debug output
+.env
+.env.*
+!.env.example
+*.env
+*.log
+*.jsonl
+*.csv
+*.zip
+*.vault
+*.export
+
+# JavaScript dependencies and test/build artifacts
+node_modules/
+coverage/
+dist/
+
+# Local editor and operating-system state
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
